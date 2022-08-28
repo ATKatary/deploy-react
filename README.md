@@ -79,7 +79,7 @@ echo -e "RewriteCond %{REQUEST_FILENAME} !-f" >> $links
 echo -e "RewriteRule ^ index.html [QSA,L]" >> $links
 ```
 
-7. we enable the site and reload apache2
+7. We enable the site and reload apache2
 ```
 echo "Enabling site ..."
 sudo a2ensite frontend.conf
