@@ -24,7 +24,7 @@ then
     echo "What is the name of your server (ex: www.example.com]?:" && read serverName
 
     sudo echo -e "\tServerName ${serverName}" >> frontend.conf
-    sudo echo -e "\tServerAdmin webmaster@localhost" >> frontend.conf
+    sudo echo -e "\tServerAdmin user@localhost" >> frontend.conf
     sudo echo -e "\tDocumentRoot /var/www/frontend\n" >> frontend.conf
 
     sudo echo -e "\t<Directory /var/www/frontend/>" >> frontend.conf
