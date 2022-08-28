@@ -6,6 +6,7 @@ git clone https://github.com/ATKatary/deploy-react.git
 sudo bash deploy-react/deploy.sh
 ````
 # Script breakdown
+_**Note: Steps 2 - 4 are only done the first time you deploy**_ </b>
 1. We create a production build for the react app
 ```
 cd $appDir
