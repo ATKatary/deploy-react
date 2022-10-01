@@ -55,23 +55,23 @@ then
     then
         echo "\033[0;33mOverwriting ...\033[0m"
         sudo rm -rf /var/www/frontend
-        deploy=true
+        deploy="y"
     else
-        deploy=false
+        deploy="n"
     fi
 else
     echo "First time deploying app ..."
 fi
 
-if [ deploy ]
+if [ $deploy == "y" ]
 then
     echo "\033[0;33mDeploying...\033[0m"
     start="$(date +%s)"
-    
-    sudo mkdir /var/www/frontend
 
     cd $appDir
     npm run build
+
+    sudo mkdir /var/www/frontend
     sudo mv $appDir/build/* /var/www/frontend/
     rmdir build
 
@@ -88,7 +88,7 @@ then
     sudo systemctl restart apache2.service
 
     runtime=$[ $(date +%s) - $start ]
-    echo -e "\033[0;32mDeployment successful! in ${runtime} seconds\033[0m"
+    echo -e "\033[0;32mDeployed successfully in ${runtime} seconds!\033[0m"
 else 
     echo -e '\033[0;33mDeployment halted!\033[0m'
 fi
