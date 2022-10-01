@@ -6,21 +6,14 @@ git clone https://github.com/ATKatary/deploy-react.git
 sudo bash deploy-react/deploy.sh
 ````
 # Script breakdown
-_**Note: Steps 2 - 4 are only done the first time you deploy**_ </b>
-1. We create a production build for the react app
-```
-cd $appDir
-npm run build
-cd $appDir/build
-```
-
-2. We configure our server to allow outgoing traffic and deny incoming traffic
+_**Note: Steps 1 - 3 are only done the first time you deploy**_ </b>
+1. We configure our server to allow outgoing traffic and deny incoming traffic
 ```
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 ```
 
-3. We allow incoming traffic over ssh (port 22) and ports 80/443
+2. We allow incoming traffic over ssh (port 22) and ports 80/443
 ```
 sudo ufw allow ssh
 sudo ufw allow 80
@@ -28,7 +21,7 @@ sudo ufw allow 443
 sudo ufw enable
 ```
 
-4. We install apache2 and setup a virtualhost for port 80 that servers our build </br>
+3. We install apache2 and setup a virtualhost for port 80 that servers our build </br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- The configuration is inside /etc/apache2/sites-enabled/frontend.conf
 ```
 sudo apt update
@@ -61,11 +54,16 @@ sudo a2dissite 000-default.conf
 sudo a2enmod rewrite
 ```
 
+4. We create a production build for the react app
+```
+cd $appDir
+npm run build
+```
+
 5. We move our build to /var/www so apache2 can access it
 ```
 sudo mkdir /var/www/frontend
-sudo cp -r $appDir/build/* /var/www/frontend/
-rm -rf $appDir/build
+sudo mv $appDir/build/* /var/www/frontend/
 ```
 
 6. We create .htaccess file inside of our build at /var/www/frontend </br>
