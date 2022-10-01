@@ -1,10 +1,4 @@
-read -p 'Use /home/akatary/ahmed/frontend as path of the react app? ([y],n): ' useDefault
-if [ useDefault == "n" ]
-then
-    echo "What is the path of the react app?" && read appDir
-else 
-    appDir="/home/akatary/ahmed/frontend"
-fi
+echo "What is the path of the react app?" && read appDir
 
 if [ ! -f /etc/apache2/sites-available/frontend.conf ]
 then
