@@ -41,13 +41,14 @@ else
     echo "Site already deployed on apache"
 fi
 
+deploy="y"
 cd $appDir
 if [ -d  /var/www/frontend ]
 then
     read -p "App has been deployed before, do you want to overwrite? (y, [n]): " overwrite
     if [ $overwrite == "y" ]
     then
-        echo "\033[0;33mOverwriting ...\033[0m"
+        echo '\033[0;33mOverwriting ...\033[0m'
         sudo rm -rf /var/www/frontend
         deploy="y"
     else
@@ -59,7 +60,7 @@ fi
 
 if [ $deploy == "y" ]
 then
-    echo "\033[0;33mDeploying...\033[0m"
+    echo "Deploying ..."
     start="$(date +%s)"
 
     cd $appDir
