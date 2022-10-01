@@ -1,8 +1,10 @@
-echo "What is the path of the react app?" && read appDir
-
-cd $appDir
-npm run build
-cd $appDir/build
+read -p 'Use /home/akatary/ahmed/frontend as path of the react app? ([y],n): ' useDefault
+if [ useDefault == "n" ]
+then
+    echo "What is the path of the react app?" && read appDir
+else 
+    appDir="/home/akatary/ahmed/frontend"
+fi
 
 if [ ! -f /etc/apache2/sites-available/frontend.conf ]
 then
@@ -48,25 +50,45 @@ fi
 cd $appDir
 if [ -d  /var/www/frontend ]
 then
-    echo "App has been deployed before, overwriting ..."
-    sudo rm -rf /var/www/frontend
+    read -p "App has been deployed before, do you want to overwrite? (y, [n]): " overwrite
+    if [ $overwrite == "y" ]
+    then
+        echo "\033[0;33mOverwriting ...\033[0m"
+        sudo rm -rf /var/www/frontend
+        deploy=true
+    else
+        deploy=false
+    fi
 else
     echo "First time deploying app ..."
 fi
 
-sudo mkdir /var/www/frontend
-sudo cp -r $appDir/build/* /var/www/frontend/
-rm -rf $appDir/build
+if [ deploy ]
+then
+    echo "\033[0;33mDeploying...\033[0m"
+    start="$(date +%s)"
+    
+    sudo mkdir /var/www/frontend
 
-links=/var/www/frontend/.htaccess
-sudo touch $links
-echo "Options -MultiViews" > $links
-echo "RewriteEngine On" >> $links
-echo -e "RewriteCond %{REQUEST_FILENAME} !-f" >> $links
-echo -e "RewriteRule ^ index.html [QSA,L]" >> $links
+    cd $appDir
+    npm run build
+    sudo mv $appDir/build/* /var/www/frontend/
+    rmdir build
 
-echo "Enabling site ..."
-sudo a2ensite frontend.conf
+    links=/var/www/frontend/.htaccess
+    sudo touch $links
+    echo "Options -MultiViews" > $links
+    echo "RewriteEngine On" >> $links
+    echo -e "RewriteCond %{REQUEST_FILENAME} !-f" >> $links
+    echo -e "RewriteRule ^ index.html [QSA,L]" >> $links
 
-sudo systemctl restart apache2.service
-echo -e '\033[0;32mDeployment successful!\033[0m'
+    echo "Enabling site ..."
+    sudo a2ensite frontend.conf
+
+    sudo systemctl restart apache2.service
+
+    runtime=$[ $(date +%s) - $start ]
+    echo -e "\033[0;32mDeployment successful! in ${runtime} seconds\033[0m"
+else 
+    echo -e '\033[0;33mDeployment halted!\033[0m'
+fi
